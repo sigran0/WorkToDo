@@ -1,28 +1,42 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+    <v-app>
+        <v-content>
+            <toolbar @clickMenu="drawerShow = !drawerShow"/>
+            <drawer v-model="drawerShow"/>
+            <transition name="fade" mode="out-in">
+                <router-view></router-view>
+            </transition>
+        </v-content>
+    </v-app>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+    import Toolbar from './components/base/Toolbar'
+    import Drawer from './components/base/Drawer'
 
-export default {
-  name: 'app',
-  components: {
-    HelloWorld
-  }
-}
+    export default {
+        name: 'App',
+        components: {
+            Drawer,
+            Toolbar
+        },
+        data () {
+            return {
+                drawerShow: false
+            }
+        }
+    }
 </script>
 
-<style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+<style scoped>
+    .fade-enter-active,
+    .fade-leave-active {
+        transition-duration: 0.3s;
+        transition-property: opacity;
+        transition-timing-function: ease;
+    }
+    .fade-enter,
+    .fade-leave-active {
+        opacity: 0
+    }
 </style>
