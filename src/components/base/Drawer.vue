@@ -2,6 +2,8 @@
     <v-navigation-drawer
         class="deep-purple accent-4"
         dark
+        app
+        clipped
         v-model="show"
     >
         <v-list>

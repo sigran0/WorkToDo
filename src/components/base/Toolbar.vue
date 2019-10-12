@@ -1,8 +1,8 @@
 <template>
-    <v-toolbar dark>
+    <v-app-bar clipped-left app dark>
         <v-app-bar-nav-icon @click="clickMenu"></v-app-bar-nav-icon>
         <v-toolbar-title>WorkToDo</v-toolbar-title>
-    </v-toolbar>
+    </v-app-bar>
 </template>
 
 <script>

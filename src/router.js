@@ -4,7 +4,7 @@ import VueRouter from 'vue-router'
 
 import Home from "./pages/Home"
 
-Vue.use(VueRouter);
+Vue.use(VueRouter)
 
 const router = new VueRouter({
     mode: 'history',

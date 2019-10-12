@@ -1,8 +1,8 @@
 <template>
-    <v-app>
+    <v-app id="app">
+        <toolbar app @clickMenu="drawerShow = !drawerShow"/>
+        <drawer app v-model="drawerShow"/>
         <v-content>
-            <toolbar @clickMenu="drawerShow = !drawerShow"/>
-            <drawer v-model="drawerShow"/>
             <transition name="fade" mode="out-in">
                 <router-view></router-view>
             </transition>
