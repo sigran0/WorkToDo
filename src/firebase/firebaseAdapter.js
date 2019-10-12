@@ -29,6 +29,12 @@ const deleteItem = async (id) => {
     return true
 }
 
+db.collection('text').onSnapshot((item) => {
+    item.forEach(doc => {
+        console.log('fucking', doc.data())
+    })
+})
+
 export default {
     write,
     read,

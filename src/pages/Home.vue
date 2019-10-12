@@ -32,7 +32,7 @@
 </template>
 
 <script>
-    import firebaseAdapter from "../firebase/firebaseAdapter"
+    import firebaseAdapter from '../firebase/firebaseAdapter'
     export default {
         name: "Home",
         data () {
