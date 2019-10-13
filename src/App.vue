@@ -13,6 +13,8 @@
 <script>
     import Toolbar from './components/base/Toolbar'
     import Drawer from './components/base/Drawer'
+    import { mapActions } from 'vuex'
+    import types from './store/types'
 
     export default {
         name: 'App',
@@ -24,6 +26,19 @@
             return {
                 drawerShow: false
             }
+        },
+        methods: {
+            ...mapActions({
+                apiPush: types.API.PUSH_QUEUE_ITEM
+            })
+        },
+        mounted() {
+            const params = {
+                key: 'hello World',
+                methodName: 'fuck you'
+            }
+            console.log(this.$store)
+            this.apiPush(params)
         }
     }
 </script>
