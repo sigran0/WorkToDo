@@ -9,59 +9,59 @@
                     label="text"
                     placeholder="text"
                     outlined
+                    @keydown.enter="write"
                 >
                 </v-text-field>
-                <v-btn class="pa-2 elevation-1" style="margin-bottom: 20px;" width="100%" @click="write">write text</v-btn>
-                <v-btn class="pa-2 elevation-1" style="margin-bottom: 20px;" width="100%" @click="read">read text</v-btn>
+                <v-btn class="pa-2 elevation-1" style="margin-bottom: 20px;" width="100%" @click="OnClickWrite">write text</v-btn>
+                <v-btn class="pa-2 elevation-1" style="margin-bottom: 20px;" width="100%" @click="OnClickRead">read text</v-btn>
             </v-col>
             <v-col cols="8">
-                <v-list>
-                    <v-list-item
-                        v-for="(item, index) in dataList"
-                        :key="`${index}-data-item`"
-                        @click="deleteItem(item)"
-                    >
-                        <v-list-item-content>
-                            {{ item.text }}
-                        </v-list-item-content>
-                    </v-list-item>
-                </v-list>
+<!--                <v-list v-if="articles.length > 0">-->
+<!--                    <v-list-item-->
+<!--                        v-for="(item, index) in articles"-->
+<!--                        :key="`${index}-data-item`"-->
+<!--                    >-->
+<!--                        <v-list-item-content>-->
+<!--                            {{ item.text }}-->
+<!--                        </v-list-item-content>-->
+<!--                    </v-list-item>-->
+<!--                </v-list>-->
             </v-col>
         </v-row>
     </v-container>
 </template>
 
 <script>
-    import firebaseAdapter from '../firebase/firebaseAdapter'
+    import api from '../api'
+    import { mapState, mapActions } from 'vuex'
+    import types from '../store/types'
+
     export default {
-        name: "Home",
+        name: 'Home',
         data () {
             return {
-                dataList: [],
                 text: ''
             }
         },
+        computed: {
+            ...mapState({
+                articles: state => state.Article.articles
+            })
+        },
         methods: {
-            async write () {
-                await firebaseAdapter.write(this.text)
-                await this.read()
-                this.text = ''
+            ...mapActions([types.Article.WRITE_ARTICLE]),
+            async OnClickWrite () {
+                // const result = await api.Article.write(this.text)
+                const result = await this.$store.dispatch(types.Article.WRITE_ARTICLE, this.text)
+                console.log(result)
             },
-            async read () {
-                const snapshot = await firebaseAdapter.read()
-                const datas = snapshot.docs.reduce((list, doc) => {
-                    const id = doc.id
-                    const data = doc.data()
-                    list.push( { id: id, text: data.text })
-                    return list
-                }, [])
-                this.dataList.splice(0, this.dataList.length)
-                this.dataList.push(...datas)
-            },
-            async deleteItem (item) {
-                await firebaseAdapter.deleteItem(item.id)
-                await this.read()
+            async OnClickRead () {
+                const result = await api.Article.read()
+                console.log(result)
             }
+        },
+        async mounted () {
+            await this.OnClickRead()
         }
     }
 </script>

@@ -10,6 +10,16 @@ firebase.initializeApp({
 
 const db = firebase.firestore()
 
+const extractItemFromSnapshot = (snapshot) => {
+    return snapshot.docs.reduce((list, doc) => {
+        const id = doc.id
+        const data = doc.data()
+        const timestamp = doc.timestamp
+        list.push( { id: id, text: data.text, timestamp: timestamp })
+        return list
+    }, [])
+}
+
 const write = async (text) => {
     const doc = await db.collection('text').add({
         text: text,
@@ -19,9 +29,8 @@ const write = async (text) => {
 }
 
 const read = async () => {
-    const snapshot = await db.collection('text').orderBy('timestamp', 'desc')
-        .get()
-    return snapshot
+    const snapshot = await db.collection('text').orderBy('timestamp', 'desc').get()
+    return extractItemFromSnapshot(snapshot)
 }
 
 const deleteItem = async (id) => {
@@ -29,10 +38,8 @@ const deleteItem = async (id) => {
     return true
 }
 
-db.collection('text').onSnapshot((item) => {
-    item.forEach(doc => {
-        console.log('fucking', doc.data())
-    })
+db.collection('text').onSnapshot((snapshot) => {
+    return extractItemFromSnapshot(snapshot)
 })
 
 export default {
