@@ -9,7 +9,7 @@
                     label="text"
                     placeholder="text"
                     outlined
-                    @keydown.enter="write"
+                    @keydown.enter="OnClickWrite"
                 >
                 </v-text-field>
                 <v-btn class="pa-2 elevation-1" style="margin-bottom: 20px;" width="100%" @click="OnClickWrite">write text</v-btn>
@@ -51,8 +51,8 @@
         methods: {
             ...mapActions([types.Article.WRITE_ARTICLE]),
             async OnClickWrite () {
-                // const result = await api.Article.write(this.text)
-                const result = await this.$store.dispatch(types.Article.WRITE_ARTICLE, this.text)
+                const result = await api.Article.write(this.text)
+                // const result = await this.$store.dispatch(types.Article.WRITE_ARTICLE, this.text)
                 console.log(result)
             },
             async OnClickRead () {

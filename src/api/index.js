@@ -34,7 +34,7 @@ export default {
     Article: {
         async read () {
             const result = await caller.call(firebaseAdapter.read)
-            this.dispatch(types.Article.WRITE_ARTICLE, result)
+            store.dispatch(types.Article.WRITE_ARTICLE, result)
             return result
         },
         async write (text) {
