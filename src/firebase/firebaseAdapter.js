@@ -29,7 +29,7 @@ const write = async (text) => {
 }
 
 const read = async () => {
-    const snapshot = await db.collection('text').orderBy('timestamp', 'desc').get()
+    const snapshot = await db.collection('text').orderBy('timestamp').get()
     return extractItemFromSnapshot(snapshot)
 }
 

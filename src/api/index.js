@@ -34,11 +34,15 @@ export default {
     Article: {
         async read () {
             const result = await caller.call(firebaseAdapter.read)
-            store.dispatch(types.Article.WRITE_ARTICLE, result)
+            store.dispatch(types.Article.READ_ARTICLES, result)
             return result
         },
         async write (text) {
             const result = await caller.call(firebaseAdapter.write, text)
+            return result
+        },
+        async deleteItem (id) {
+            const result = await caller.call(firebaseAdapter.deleteItem, id)
             return result
         }
     }

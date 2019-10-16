@@ -1,10 +1,10 @@
 <template>
     <v-navigation-drawer
-        class="deep-purple accent-4"
         dark
-        app
         clipped
+        absolute
         v-model="show"
+        style="padding-top: 50px"
     >
         <v-list>
             <v-list-item

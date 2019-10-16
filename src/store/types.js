@@ -9,6 +9,7 @@ export default {
         LOGIN: 'LOGIN'
     },
     Article: {
+        EMPTY_ARTICLES: 'EMPTY_ARTICLES',
         READ_ARTICLES: 'READ_ARTICLES',
         WRITE_ARTICLE: 'WRITE_ARTICLE',
         MODIFY_ARTICLE: 'MODIFY_ARTICLE',
