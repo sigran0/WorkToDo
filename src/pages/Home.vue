@@ -19,7 +19,7 @@
                                 <v-icon>mdi-delete-circle</v-icon>
                             </v-btn>
                         </template>
-                        <v-btn icon @click="writing = !writing">
+                        <v-btn icon @click="OnClickAddIcon">
                             <v-icon>mdi-plus-circle</v-icon>
                         </v-btn>
                         <v-progress-linear
@@ -38,26 +38,36 @@
                             <v-list-item
                                 v-for="(item, index) in articles"
                                 :key="`${index}-article`"
-                                 @click="OnClickDelete(item)"
                             >
-                                <v-list-item-content>
-                                    <v-list-item-title>
-                                        {{ item.text }}
-                                    </v-list-item-title>
-                                </v-list-item-content>
-                                <v-list-item-icon>
-                                    <v-icon>mdi-delete</v-icon>
-                                </v-list-item-icon>
+                                <v-hover v-slot:default="{ hover }">
+                                    <v-row>
+                                        <v-list-item-content>
+                                            <v-list-item-title>
+                                                {{ item.text }}
+                                            </v-list-item-title>
+                                        </v-list-item-content>
+                                        <v-list-item-icon>
+                                            <v-icon style="color: rgba(0,0,0,0)">.</v-icon>
+                                        </v-list-item-icon>
+                                        <v-list-item-icon v-if="hover === true" @click="OnClickModifyIcon(item)">
+                                            <v-icon>mdi-border-color</v-icon>
+                                        </v-list-item-icon>
+                                        <v-list-item-icon v-if="hover === true" @click="OnClickDelete(item)">
+                                            <v-icon>mdi-delete</v-icon>
+                                        </v-list-item-icon>
+                                    </v-row>
+                                </v-hover>
                             </v-list-item>
                         </v-list>
-                        <div v-show="writing">
-                            <v-text-field v-model="text" @keyup.enter="OnClickWrite(text)" outlined flat autofocus placeholder="Write down whatever you want."/>
-                        </div>
+                        <v-text-field v-show="writing" v-model="text" @keyup.enter="OnClickWrite(text)" outlined flat autofocus placeholder="Write down whatever you want."/>
+                        <v-text-field v-show="modifying" v-model="text" @keyup.enter="OnClickModify()" outlined flat autofocus placeholder="Write down whatever you wanna modify it." />
                     </v-card-text>
-                    <v-card-actions v-show="writing">
+                    <v-card-actions v-show="writing || modifying">
                         <v-spacer></v-spacer>
-                        <v-btn text color="primary" @click="OnClickWrite(text)">Write</v-btn>
+                            <v-btn v-show="writing" text color="primary" @click="OnClickWrite()">Write</v-btn>
+                        <v-btn v-show="modifying" text color="warning" @click="OnClickModify()">Modify</v-btn>
                     </v-card-actions>
+                    {{ visibleText }}, {{ hashtags }}
                 </v-card>
             </v-col>
 
@@ -68,13 +78,17 @@
 <script>
     import api from '../api'
     import { mapState } from 'vuex'
+    import twitter from 'twitter-text'
+
 
     export default {
         name: 'Home',
         data () {
             return {
                 text: '',
-                writing: false
+                writing: false,
+                modifying: false,
+                modifyingItem: { text: '' }
             }
         },
         computed: {
@@ -84,7 +98,16 @@
             }),
             loading () {
                 return Object.keys(this.apiQueue).length > 0
+            },
+            visibleText () {
+                const regexp = new RegExp('#([^\\s]*)','g');
+                return this.text.replace(regexp, '')
+            },
+            hashtags () {
+                return twitter.extractHashtags(this.text)
             }
+        },
+        watch: {
         },
         methods: {
             async OnClickWrite () {
@@ -92,7 +115,6 @@
                     const text = this.text
                     this.$nextTick(async () => {
                         await api.Article.write(text)
-                        await api.Article.read()
                     })
                 }
                 this.text = ''
@@ -101,8 +123,31 @@
                 await api.Article.read()
             },
             async OnClickDelete (item) {
+                this.modifyingItem = { text: '' }
+                this.modifying = false
+                this.text = ''
                 await api.Article.deleteItem(item.id)
-                await api.Article.read()
+            },
+            async OnClickModify () {
+                const id = this.modifyingItem.id
+                const text = this.text
+
+                this.modifyingItem = { text: '' }
+                this.modifying = false
+                this.text = ''
+
+                await api.Article.modify(id, text)
+            },
+            OnClickModifyIcon (item) {
+                this.writing = false
+                this.modifying = true
+                this.modifyingItem = item
+                this.text = item.text
+            },
+            OnClickAddIcon () {
+                this.writing = true
+                this.modifying = false
+                this.text = ''
             }
         },
         async mounted () {
@@ -112,5 +157,4 @@
 </script>
 
 <style scoped>
-
 </style>

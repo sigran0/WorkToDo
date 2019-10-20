@@ -10,20 +10,20 @@ firebase.initializeApp({
 
 const db = firebase.firestore()
 
+
 const extractItemFromSnapshot = (snapshot) => {
     return snapshot.docs.reduce((list, doc) => {
         const id = doc.id
         const data = doc.data()
-        const timestamp = doc.timestamp
-        list.push( { id: id, text: data.text, timestamp: timestamp })
+        list.push( { id: id, text: data.text, timestamp: data.timestamp, modifying: false })
         return list
     }, [])
 }
 
-const write = async (text) => {
-    const doc = await db.collection('text').add({
-        text: text,
-        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+const write = async (params) => {
+    const doc = await db.collection('text').doc(params.id).set({
+        text: params.text,
+        timestamp: params.timestamp
     })
     return doc
 }
