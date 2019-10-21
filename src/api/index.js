@@ -48,20 +48,20 @@ export default {
             store.dispatch(types.Article.READ_ARTICLES, result)
             return result
         },
-        async write (text) {
+        async write (visibleText, hashtags) {
             const timestamp = new Date().toISOString()
             const id = generate258BitKey()
 
-            const params = { text: text, timestamp: timestamp, id: id }
+            const params = { timestamp: timestamp, id: id, visibleText: visibleText, hashtags: hashtags }
             store.dispatch(types.Article.WRITE_ARTICLE, params)
 
-            const result = await caller.call(firebaseAdapter.write, { id: id, text: text, timestamp: timestamp })
+            const result = await caller.call(firebaseAdapter.write, params)
 
             return result
         },
-        async modify (id, text) {
+        async modify (id, visibleText, hashtags) {
             const timestamp = new Date().toISOString()
-            const params = { text: text, timestamp: timestamp, id: id }
+            const params = { visibleText: visibleText, hashtags: hashtags, timestamp: timestamp, id: id }
             store.dispatch(types.Article.MODIFY_ARTICLE, params)
 
             const result = await caller.call(firebaseAdapter.write, params)

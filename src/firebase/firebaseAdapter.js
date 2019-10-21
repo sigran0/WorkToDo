@@ -15,15 +15,16 @@ const extractItemFromSnapshot = (snapshot) => {
     return snapshot.docs.reduce((list, doc) => {
         const id = doc.id
         const data = doc.data()
-        list.push( { id: id, text: data.text, timestamp: data.timestamp, modifying: false })
+        list.push( { id: id, timestamp: data.timestamp, visibleText: data.visibleText, hashtags: data.hashtags, modifying: false })
         return list
     }, [])
 }
 
 const write = async (params) => {
     const doc = await db.collection('text').doc(params.id).set({
-        text: params.text,
-        timestamp: params.timestamp
+        timestamp: params.timestamp,
+        visibleText: params.visibleText,
+        hashtags: params.hashtags
     })
     return doc
 }

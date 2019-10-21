@@ -43,7 +43,22 @@
                                     <v-row>
                                         <v-list-item-content>
                                             <v-list-item-title>
-                                                {{ item.text }}
+                                                {{ item.visibleText }}
+                                                <template
+                                                    v-for="(hashtag, hashtagIndex) in item.hashtags"
+                                                >
+                                                    <v-chip
+                                                        :key="`${index}-${hashtagIndex}-hashtag`"
+                                                        color="primary"
+                                                        small
+                                                        style="margin-left: 3px;"
+                                                        :close="hover"
+                                                        @click:close="OnClickCloseHashtag(item, hashtagIndex)"
+                                                    >
+                                                        {{ hashtag }}
+                                                    </v-chip>
+
+                                                </template>
                                             </v-list-item-title>
                                         </v-list-item-content>
                                         <v-list-item-icon>
@@ -67,7 +82,6 @@
                             <v-btn v-show="writing" text color="primary" @click="OnClickWrite()">Write</v-btn>
                         <v-btn v-show="modifying" text color="warning" @click="OnClickModify()">Modify</v-btn>
                     </v-card-actions>
-                    {{ visibleText }}, {{ hashtags }}
                 </v-card>
             </v-col>
 
@@ -78,8 +92,6 @@
 <script>
     import api from '../api'
     import { mapState } from 'vuex'
-    import twitter from 'twitter-text'
-
 
     export default {
         name: 'Home',
@@ -100,11 +112,11 @@
                 return Object.keys(this.apiQueue).length > 0
             },
             visibleText () {
-                const regexp = new RegExp('#([^\\s]*)','g');
-                return this.text.replace(regexp, '')
+                return this.text.replace(/#\S+/g,'').trim()
             },
             hashtags () {
-                return twitter.extractHashtags(this.text)
+                const hashtags = this.text.match(/#\S+/g) || []
+                return hashtags.map(str => str.slice(1))
             }
         },
         watch: {
@@ -112,9 +124,10 @@
         methods: {
             async OnClickWrite () {
                 if (this.text.length > 0) {
-                    const text = this.text
+                    const hashtags = this.hashtags
+                    const visibleText = this.visibleText
                     this.$nextTick(async () => {
-                        await api.Article.write(text)
+                        await api.Article.write(visibleText, hashtags)
                     })
                 }
                 this.text = ''
@@ -129,25 +142,36 @@
                 await api.Article.deleteItem(item.id)
             },
             async OnClickModify () {
+                console.log(this.modifyingItem)
                 const id = this.modifyingItem.id
-                const text = this.text
+                const visibleText = this.visibleText
+                const hashtags = this.hashtags
 
                 this.modifyingItem = { text: '' }
                 this.modifying = false
                 this.text = ''
 
-                await api.Article.modify(id, text)
+                await api.Article.modify(id, visibleText, hashtags)
             },
             OnClickModifyIcon (item) {
                 this.writing = false
                 this.modifying = true
                 this.modifyingItem = item
-                this.text = item.text
+                const hashtags = item.hashtags.map(tag => `#${tag}`).join(' ')
+                this.text = `${item.visibleText} ${hashtags}`
             },
             OnClickAddIcon () {
                 this.writing = true
                 this.modifying = false
                 this.text = ''
+            },
+            async OnClickCloseHashtag(item, hashtagIndex) {
+                item.hashtags.splice(hashtagIndex, 1)
+                const id = item.id
+                const visibleText = item.visibleText
+                const hashtags = item.hashtags
+
+                await api.Article.modify(id, visibleText, hashtags)
             }
         },
         async mounted () {
@@ -157,4 +181,7 @@
 </script>
 
 <style scoped>
+    .v-list-item__title {
+        white-space: normal;
+    }
 </style>

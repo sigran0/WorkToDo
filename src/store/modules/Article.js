@@ -14,8 +14,8 @@ const mutations = {
         state.articles.push(params)
     },
     [types.Article.MODIFY_ARTICLE] (state, params) {
-        const key = params.key
-        const index = state.articles.findIndex(item => item.key === key)
+        const id = params.id
+        const index = state.articles.findIndex(item => item.id === id)
 
         Vue.set(state.articles, index, params)
     },
