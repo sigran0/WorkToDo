@@ -1,13 +1,16 @@
 <template>
     <v-container>
-        <div id="login-container">
-        </div>
+        <editable-list-item />
     </v-container>
 </template>
 
 <script>
+    import EditableListItem from '../components/EditableListItem'
     export default {
         name: 'Login',
+        components: {
+            EditableListItem
+        },
         mounted () {
         }
     }
