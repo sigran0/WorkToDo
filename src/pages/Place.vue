@@ -4,7 +4,7 @@
             justify="center"
             align="center">
 
-            <v-col lg="8" md="10" sm="12">
+            <v-col lg="10" md="12">
                 <v-card outlined tile>
                     <v-toolbar flat>
                         <v-toolbar-title>
@@ -14,9 +14,6 @@
                         <template v-if="$vuetify.breakpoint.smAndUp">
                             <v-btn icon>
                                 <v-icon>mdi-export-variant</v-icon>
-                            </v-btn>
-                            <v-btn icon>
-                                <v-icon>mdi-delete-circle</v-icon>
                             </v-btn>
                         </template>
                         <v-btn icon @click="OnClickAddIcon">
@@ -94,7 +91,7 @@
     import { mapState } from 'vuex'
 
     export default {
-        name: 'Home',
+        name: 'Place',
         data () {
             return {
                 text: '',
@@ -125,15 +122,12 @@
             async OnClickWrite () {
                 if (this.text.length > 0) {
                     const hashtags = this.hashtags
-                    const visibleText = this.visibleText
+                    const visibleText = this.visibleText.trim()
                     this.$nextTick(async () => {
                         await api.Article.write(visibleText, hashtags)
                     })
                 }
                 this.text = ''
-            },
-            async OnClickRead () {
-                await api.Article.read()
             },
             async OnClickDelete (item) {
                 this.modifyingItem = { text: '' }
@@ -144,7 +138,7 @@
             async OnClickModify () {
                 console.log(this.modifyingItem)
                 const id = this.modifyingItem.id
-                const visibleText = this.visibleText
+                const visibleText = this.visibleText.trim()
                 const hashtags = this.hashtags
 
                 this.modifyingItem = { text: '' }
@@ -158,7 +152,7 @@
                 this.modifying = true
                 this.modifyingItem = item
                 const hashtags = item.hashtags.map(tag => `#${tag}`).join(' ')
-                this.text = `${item.visibleText} ${hashtags}`
+                this.text = `${item.visibleText} ${hashtags}`.trim()
             },
             OnClickAddIcon () {
                 this.writing = true
@@ -168,10 +162,16 @@
             async OnClickCloseHashtag(item, hashtagIndex) {
                 item.hashtags.splice(hashtagIndex, 1)
                 const id = item.id
-                const visibleText = item.visibleText
+                const visibleText = item.visibleText.trim()
                 const hashtags = item.hashtags
 
-                await api.Article.modify(id, visibleText, hashtags)
+                console.log(visibleText, hashtags)
+
+                if (visibleText.length === 0 && hashtags.length === 0) {
+                    await api.Article.deleteItem(item.id)
+                } else {
+                    await api.Article.modify(id, visibleText, hashtags)
+                }
             }
         },
         async mounted () {

@@ -1,6 +1,6 @@
 <template>
     <v-app-bar clipped-left app dark flat>
-        <template v-if="$vuetify.breakpoint.xsOnly">
+        <template v-if="$vuetify.breakpoint.smAndDown">
             <v-app-bar-nav-icon @click="clickMenu"></v-app-bar-nav-icon>
         </template>
         <v-toolbar-title>WorkToDo</v-toolbar-title>

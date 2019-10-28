@@ -22,8 +22,25 @@ const showModel = {
     }
 }
 
-export default {
-    showModel
+const hide = {
+    data () {
+        return {
+            hide: false
+        }
+    },
+    watch: {
+        $route: {
+            handler (value) {
+                this.hide = value.meta.hide
+            },
+            immediate: true
+        }
+    },
 }
 
-export { showModel }
+export default {
+    showModel,
+    hide
+}
+
+export { showModel, hide }

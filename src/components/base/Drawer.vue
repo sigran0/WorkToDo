@@ -1,8 +1,10 @@
 <template>
     <v-navigation-drawer
+        app
         dark
         clipped
         absolute
+        mobile-break-point="960"
         v-model="show"
         style="padding-top: 50px"
     >
@@ -24,7 +26,7 @@
 
         <template v-slot:append>
             <div class="pa-2">
-                <v-btn block>Logout</v-btn>
+                <v-btn block text>Logout</v-btn>
             </div>
         </template>
     </v-navigation-drawer>
@@ -37,11 +39,11 @@
         mixins: [showModel],
         data () {
             return {
-                items: [
-                    { title: 'Home', icon: 'mdi-home' },
-                    { title: 'About', icon: 'mdi-about' },
-                ]
+                items: [],
             }
+        },
+        mounted () {
+            this.show = true
         }
     }
 </script>

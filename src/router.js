@@ -2,16 +2,18 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
-import Home from "./pages/Home"
+import Place from "./pages/Place"
 import Login from './pages/Login'
+import Index from './pages/Index'
 
 Vue.use(VueRouter)
 
 const router = new VueRouter({
     mode: 'history',
     routes: [
-        { path: '/', component: Home },
-        { path: '/login', component: Login }
+        { path: '/', component: Index, name: 'Index', meta: { hide: true } },
+        { path: '/Place', component: Place, name: 'Place', meta: { hide: false } },
+        { path: '/Login', component: Login, name: 'Login', meta: { hide: true } }
     ]
 })
 

@@ -1,7 +1,7 @@
 <template>
     <v-app id="app">
-        <toolbar app @clickMenu="drawerShow = !drawerShow"/>
-        <drawer app v-model="drawerShow"/>
+        <toolbar app @clickMenu="drawerShow = !drawerShow" v-if="!hide"/>
+        <drawer app v-model="drawerShow" v-if="!hide"/>
         <v-content>
             <transition name="fade" mode="out-in">
                 <router-view></router-view>
@@ -22,7 +22,16 @@
         },
         data () {
             return {
-                drawerShow: false
+                drawerShow: false,
+                hide: false
+            }
+        },
+        watch: {
+            $route: {
+                handler (value) {
+                    this.hide = value.meta.hide
+                },
+                immediate: true
             }
         }
     }
