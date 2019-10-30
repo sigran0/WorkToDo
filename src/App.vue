@@ -13,6 +13,7 @@
 <script>
     import Toolbar from './components/base/Toolbar'
     import Drawer from './components/base/Drawer'
+    import { mapState } from 'vuex'
 
     export default {
         name: 'App',

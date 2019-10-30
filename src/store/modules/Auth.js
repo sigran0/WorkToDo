@@ -1,6 +1,5 @@
 import types from '../types'
 import consts from '../../consts'
-import firebaseAdapter from '../../firebase/firebaseAdapter'
 
 const state = {
     user: null,
@@ -17,13 +16,14 @@ const mutations = {
     [types.Auth.LOGOUT] (state) {
         state.user = null
         state.userState = consts.Auth.NOT_LOGIN
+    },
+    [types.Auth.SET_USER] (state, user) {
+        state.user = user
     }
 }
 
 const actions = {
     async [types.Auth.LOGIN] ({ commit }, params) {
-        const user = firebaseAdapter.checkLogin()
-        console.log(user)
         commit(types.Auth.LOGIN, params)
     },
     async [types.Auth.LOGOUT] ({ commit }) {
@@ -32,7 +32,7 @@ const actions = {
 }
 
 const getters = {
-
+    checkLogin: state => state.user !== null
 }
 
 export default {

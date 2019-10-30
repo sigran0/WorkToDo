@@ -6,7 +6,8 @@ export default {
     },
     Auth: {
         LOGOUT: 'LOGOUT',
-        LOGIN: 'LOGIN'
+        LOGIN: 'LOGIN',
+        SET_USER: 'SET_USER'
     },
     Article: {
         EMPTY_ARTICLES: 'EMPTY_ARTICLES',

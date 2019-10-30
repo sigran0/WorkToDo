@@ -26,10 +26,6 @@
     export default {
         name: 'Login',
         methods: {
-            async OnClickLoginByGoogle () {
-                const result = await firebaseAuth.loginByGoogle()
-                console.log(result)
-            }
         }
     }
 </script>
