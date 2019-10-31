@@ -22,7 +22,6 @@
 </template>
 
 <script>
-    import firebaseAuth from '../firebase/firebaseAdapter'
     export default {
         name: 'Login',
         methods: {

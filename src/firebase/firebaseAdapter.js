@@ -1,8 +1,7 @@
 
 import firebase from './firebase'
 
-const db = firebase.firestore()
-
+const db = firebase.firestore
 
 const extractItemFromSnapshot = (snapshot) => {
     return snapshot.docs.reduce((list, doc) => {
@@ -14,10 +13,21 @@ const extractItemFromSnapshot = (snapshot) => {
 }
 
 const write = async (params) => {
+
     const doc = await db.collection('text').doc(params.id).set({
         timestamp: params.timestamp,
         visibleText: params.visibleText,
         hashtags: params.hashtags
+    })
+    return doc
+}
+
+const write2 = async (uid, timestamp, visibleText, hashtags) => {
+    const doc = await db.collection('user').doc(uid).collection('todo').set({
+        timestamp: timestamp,
+        visibleText: visibleText,
+        hashtags: hashtags,
+        owner: uid
     })
     return doc
 }
@@ -39,5 +49,6 @@ db.collection('text').onSnapshot((snapshot) => {
 export default {
     write,
     read,
-    deleteItem
+    deleteItem,
+    write2
 }

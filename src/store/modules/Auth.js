@@ -28,11 +28,15 @@ const actions = {
     },
     async [types.Auth.LOGOUT] ({ commit }) {
         commit(types.Auth.LOGOUT)
+    },
+    [types.Auth.SET_USER] ({ commit }, params) {
+        commit(types.Auth.SET_USER, params.user)
     }
 }
 
 const getters = {
-    checkLogin: state => state.user !== null
+    checkLogin: state => state.user !== null,
+    getUser: state => state.user
 }
 
 export default {

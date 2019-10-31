@@ -13,7 +13,9 @@
 <script>
     import Toolbar from './components/base/Toolbar'
     import Drawer from './components/base/Drawer'
-    import { mapState } from 'vuex'
+    import firebase from './firebase/firebase'
+    import { mapActions, mapState } from 'vuex'
+    import types from './store/types'
 
     export default {
         name: 'App',
@@ -27,13 +29,29 @@
                 hide: false
             }
         },
+        computed: {
+            ...mapState({
+                user: state => state.Auth.user
+            })
+        },
         watch: {
             $route: {
                 handler (value) {
+                    console.log(value)
                     this.hide = value.meta.hide
                 },
                 immediate: true
             }
+        },
+        methods: {
+            ...mapActions({
+                setUser: types.Auth.SET_USER
+            })
+        },
+        mounted () {
+            firebase.auth.onAuthStateChanged(user => {
+                this.setUser({ user: user })
+            })
         }
     }
 </script>

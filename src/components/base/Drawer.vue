@@ -43,7 +43,7 @@
             }
         },
         mounted () {
-            this.show = true
+            this.show = window.innerWidth > 960
         }
     }
 </script>

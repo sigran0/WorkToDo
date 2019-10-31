@@ -24,7 +24,7 @@
                             :indeterminate="loading"
                             absolute
                             bottom
-                            color="deep-purple accent-4"
+                            color="#4f4f4f"
                         ></v-progress-linear>
                     </v-toolbar>
                     <v-card-text>
@@ -71,8 +71,8 @@
                                 </v-hover>
                             </v-list-item>
                         </v-list>
-                        <v-text-field v-show="writing" v-model="text" @keyup.enter="OnClickWrite(text)" outlined flat autofocus placeholder="Write down whatever you want."/>
-                        <v-text-field v-show="modifying" v-model="text" @keyup.enter="OnClickModify()" outlined flat autofocus placeholder="Write down whatever you wanna modify it." />
+                        <v-text-field v-show="writing" v-model="text" @keyup.enter="OnClickWrite(text)" outlined flat autofocus hide-details placeholder="Write down whatever you want."/>
+                        <v-text-field v-show="modifying" v-model="text" @keyup.enter="OnClickModify()" outlined flat autofocus hide-details placeholder="Write down whatever you wanna modify it." />
                     </v-card-text>
                     <v-card-actions v-show="writing || modifying">
                         <v-spacer></v-spacer>
